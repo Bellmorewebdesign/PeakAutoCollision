@@ -524,13 +524,42 @@ h1, h2, h3 {
   .nav-call-label { display: inline; }
 }
 
+/* Tablet + phone spacing (desktop is >860px and untouched) */
+@media (max-width: 860px) {
+  .section { padding: 64px 0; }
+  .section-head { margin-bottom: 40px; }
+  .services-grid,
+  .reviews-grid,
+  .gallery-grid { gap: 18px; }
+  .service-card { padding: 22px 22px; }
+  .services-note { margin-top: 34px; }
+  .contact-info { padding: 30px 24px; }
+}
+
 @media (max-width: 520px) {
-  .section { padding: 60px 0; }
-  .hero { padding: 56px 20px 64px; }
-  .hero-buttons { flex-direction: column; }
+  .section { padding: 52px 0; }
+  .container { padding: 0 18px; }
+  .section-head { margin-bottom: 32px; }
+
+  /* Slightly compact typography so pages scroll less */
+  body { line-height: 1.55; }
+  .section-lead { font-size: 1rem; }
+  .service-card p,
+  .review-card p,
+  .about-text p { font-size: 0.98rem; line-height: 1.55; }
+
+  .brand-logo { height: 40px; }
+  .hero { padding: 48px 20px 56px; }
+  .hero-logo { margin-bottom: 22px; }
+  .hero-buttons { flex-direction: column; gap: 12px; }
   .hero-buttons .btn { width: 100%; }
+
+  .service-card { padding: 20px 20px; }
+  .about-quote { padding: 14px 18px; font-size: 1.02rem; }
   .about-buttons .btn,
   .contact-buttons .btn { flex: 1 1 auto; }
+  .contact-map,
+  .contact-map iframe { min-height: 280px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
