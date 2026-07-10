@@ -357,6 +357,12 @@ h1, h2, h3 {
 }
 .reviews-score .stars { font-size: 1.5rem; }
 .reviews-score p { margin: 0; font-size: 1.1rem; }
+.reviews-google-link {
+  margin-top: 8px;
+  font-weight: 700;
+  color: var(--red);
+}
+.reviews-google-link:hover { color: var(--red-dark); }
 .reviews-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -422,6 +428,28 @@ h1, h2, h3 {
   font-weight: 800;
 }
 .contact-phone:hover { color: var(--gold); text-decoration: none; }
+
+.hours-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 4px;
+}
+.hours-table th,
+.hours-table td {
+  text-align: left;
+  padding: 3px 0;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.97rem;
+}
+.hours-table th { font-weight: 600; color: rgba(255, 255, 255, 0.75); }
+.hours-table td { text-align: right; }
+
+.contact-google {
+  color: var(--gold);
+  font-weight: 600;
+}
+.contact-google:hover { color: var(--white); }
 .contact-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
 .contact-buttons .btn-dark { background: var(--red); border-color: var(--red); }
 .contact-buttons .btn-dark:hover { background: var(--red-dark); border-color: var(--red-dark); }
