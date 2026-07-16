@@ -251,6 +251,88 @@ h1, h2, h3 {
   line-height: 1.7;
 }
 .hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
+.business-hours-card {
+  max-width: 660px;
+  margin-top: 24px;
+  padding: 15px;
+  background: rgba(13, 13, 14, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.24);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.business-status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 11px;
+  font-size: 1rem;
+}
+.business-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 4px rgba(242, 176, 30, 0.16);
+}
+.business-status.is-open .business-status-dot {
+  background: #4ade80;
+  box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.16);
+}
+.business-status.is-open strong { color: #86efac; }
+.business-status.is-closed .business-status-dot {
+  background: #f87171;
+  box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.16);
+}
+.business-status.is-closed strong { color: #fca5a5; }
+.business-status-detail { color: rgba(255, 255, 255, 0.82); }
+.business-status-detail::before {
+  content: "·";
+  margin-right: 7px;
+  color: rgba(255, 255, 255, 0.48);
+}
+.hero-hours {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 7px;
+}
+.hero-hours-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 7px 4px;
+  color: rgba(255, 255, 255, 0.68);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+.hero-hours-day span {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.hero-hours-day strong {
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 0.83rem;
+}
+.hero-hours-day.is-today {
+  background: rgba(242, 176, 30, 0.15);
+  border-color: var(--gold);
+  color: var(--gold);
+  box-shadow: inset 0 0 18px rgba(242, 176, 30, 0.08);
+}
+.hero-hours-day.is-today strong { color: var(--white); }
+.business-time-zone {
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 0.71rem;
+  text-align: right;
+}
 
 /* Hero copy fade + rise on load */
 .hero-anim {
@@ -655,6 +737,26 @@ h1, h2, h3 {
 }
 .hours-table th { font-weight: 600; color: rgba(255, 255, 255, 0.7); }
 .hours-table td { text-align: right; }
+.hours-table tr.is-today th,
+.hours-table tr.is-today td {
+  padding-top: 6px;
+  padding-bottom: 6px;
+  color: var(--white);
+  background: rgba(242, 176, 30, 0.15);
+  border-top: 1px solid rgba(242, 176, 30, 0.48);
+  border-bottom: 1px solid rgba(242, 176, 30, 0.48);
+}
+.hours-table tr.is-today th {
+  padding-left: 9px;
+  color: var(--gold);
+  border-left: 1px solid rgba(242, 176, 30, 0.48);
+  border-radius: 7px 0 0 7px;
+}
+.hours-table tr.is-today td {
+  padding-right: 9px;
+  border-right: 1px solid rgba(242, 176, 30, 0.48);
+  border-radius: 0 7px 7px 0;
+}
 
 .contact-google { color: var(--gold); font-weight: 700; }
 .contact-google:hover { color: var(--white); }
@@ -689,13 +791,17 @@ h1, h2, h3 {
 .footer-contact { margin: 0; font-size: 0.95rem; }
 .footer-contact a { color: var(--gold); font-weight: 600; }
 .footer-copy { margin: 0; font-size: 0.84rem; color: rgba(255, 255, 255, 0.45); }
-.footer-credit { margin: 8px 0 0; }
+.footer-credit { margin: 14px 0 0; }
 .footer-credit a {
-  color: rgba(255, 255, 255, 0.45);
-  font-size: 12.5px;
-  font-weight: 500;
+  display: inline-block;
+  color: var(--white);
+  font-size: clamp(1.35rem, 2.7vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  line-height: 1.25;
+  padding: 4px 8px;
 }
-.footer-credit a:hover { color: rgba(255, 255, 255, 0.7); }
+.footer-credit a:hover { color: var(--gold); text-decoration: underline; }
 
 /* ============================================================
    Lightbox
@@ -821,6 +927,10 @@ html.js .reveal.visible { opacity: 1; transform: translateY(0); }
   .hero { min-height: 0; padding: calc(var(--header-h) + 28px) 0 48px; }
   .hero-buttons { flex-direction: column; }
   .hero-buttons .btn { width: 100%; }
+  .business-hours-card { padding: 14px 12px; }
+  .business-status { font-size: 0.95rem; }
+  .hero-hours { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .hero-hours-day { padding: 6px 3px; }
 
   .trust-value { font-size: 1.1rem; }
 
