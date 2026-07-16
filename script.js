@@ -1,7 +1,7 @@
 /* ============================================================
    Peak Auto Collision — script.js
    Navigation, scroll reveals, featured-image pan, lightbox,
-   process timeline, and reviews toggle. No dependencies.
+   and reviews toggle. No dependencies.
    ============================================================ */
 (function () {
   "use strict";
@@ -75,28 +75,6 @@
     }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
 
     items.forEach(function (el) { io.observe(el); });
-  }
-
-  /* ===== Process timeline progress ===== */
-  function initProcess() {
-    var track = document.getElementById("processTrack");
-    if (!track) return;
-
-    if (reducedMotion.matches || !("IntersectionObserver" in window)) {
-      track.classList.add("in-view");
-      return;
-    }
-
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          track.classList.add("in-view");
-          io.disconnect();
-        }
-      });
-    }, { threshold: 0.3 });
-
-    io.observe(track);
   }
 
   /* ===== Featured image scroll pan =====
@@ -254,7 +232,6 @@
   initHeader();
   initMobileNav();
   initReveals();
-  initProcess();
   initFeaturedPan();
   initLightbox();
   initReviewsToggle();
