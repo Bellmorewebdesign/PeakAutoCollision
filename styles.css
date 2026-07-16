@@ -446,77 +446,6 @@ h1, h2, h3 {
 .services-note a { font-weight: 800; }
 
 /* ============================================================
-   Process
-   ============================================================ */
-.process {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 24px;
-  position: relative;
-}
-/* Track line behind the dots */
-.process::before,
-.process::after {
-  content: "";
-  position: absolute;
-  top: 7px;
-  left: 10%;
-  right: 10%;
-  height: 2px;
-  border-radius: 2px;
-}
-.process::before { background: var(--line-dark); }
-.process::after {
-  background: var(--red);
-  right: auto;
-  width: 0;
-  transition: width 1.4s var(--ease) 0.2s;
-}
-.process.in-view::after { width: 80%; }
-
-.process-step {
-  text-align: center;
-  padding: 0 6px;
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.5s ease, transform 0.5s var(--ease);
-}
-.process.in-view .process-step { opacity: 1; transform: translateY(0); }
-.process.in-view .process-step:nth-child(1) { transition-delay: 0.10s; }
-.process.in-view .process-step:nth-child(2) { transition-delay: 0.35s; }
-.process.in-view .process-step:nth-child(3) { transition-delay: 0.60s; }
-.process.in-view .process-step:nth-child(4) { transition-delay: 0.85s; }
-.process.in-view .process-step:nth-child(5) { transition-delay: 1.10s; }
-
-.process-dot {
-  display: block;
-  width: 16px; height: 16px;
-  margin: 0 auto 18px;
-  border-radius: 50%;
-  background: var(--ink);
-  border: 3px solid var(--red);
-  position: relative;
-  z-index: 1;
-}
-.process-num {
-  display: block;
-  color: var(--gold);
-  font-weight: 800;
-  font-size: 0.85rem;
-  letter-spacing: 0.14em;
-  margin-bottom: 8px;
-}
-.process-step h3 { font-size: 1.02rem; margin-bottom: 6px; }
-.process-step p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.68);
-}
-
-/* ============================================================
    Our Work
    ============================================================ */
 .work-grid {
@@ -632,6 +561,7 @@ h1, h2, h3 {
   gap: 20px;
 }
 .reviews-more { margin-top: 20px; }
+.reviews-more[hidden] { display: none; }
 .review-card {
   margin: 0;
   background: var(--white);
@@ -876,41 +806,6 @@ html.js .reveal.visible { opacity: 1; transform: translateY(0); }
 
   .trust-inner { grid-template-columns: repeat(2, 1fr); row-gap: 18px; }
   .trust-item:nth-child(3) { border-left: none; }
-
-  /* Vertical process timeline */
-  .process { grid-template-columns: 1fr; gap: 0; padding-left: 8px; }
-  .process::before,
-  .process::after {
-    top: 4px;
-    bottom: 4px;
-    left: 15px;
-    right: auto;
-    width: 2px;
-    height: auto;
-  }
-  .process::after {
-    height: 0;
-    width: 2px;
-    transition: height 1.4s var(--ease) 0.2s;
-  }
-  .process.in-view::after { height: 100%; width: 2px; }
-  .process-step {
-    text-align: left;
-    display: grid;
-    grid-template-columns: 32px 1fr;
-    grid-template-rows: auto auto auto;
-    column-gap: 14px;
-    padding: 0 0 30px;
-  }
-  .process-step:last-child { padding-bottom: 0; }
-  .process-dot {
-    grid-row: 1 / span 3;
-    margin: 3px 0 0;
-    width: 14px; height: 14px;
-  }
-  .process-num { grid-column: 2; margin-bottom: 4px; }
-  .process-step h3 { grid-column: 2; margin-bottom: 4px; }
-  .process-step p { grid-column: 2; }
 }
 
 @media (max-width: 560px) {
@@ -958,10 +853,5 @@ html.js .reveal.visible { opacity: 1; transform: translateY(0); }
   }
   .hero-anim { opacity: 1; transform: none; }
   html.js .reveal { opacity: 1; transform: none; }
-  .process-step { opacity: 1; transform: none; }
-  .process::after { width: 80%; }
   #featuredImg { transform: none !important; }
-  @media (max-width: 768px) {
-    .process::after { width: 2px; height: 100%; }
-  }
 }
