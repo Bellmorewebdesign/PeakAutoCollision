@@ -119,6 +119,24 @@
           <a href="#contact" class="btn btn-primary">Get an Estimate</a>
           <a href="tel:+15167852084" class="btn btn-ghost">Call the Shop</a>
         </div>
+
+        <div class="business-hours-card hero-anim" style="--d: 360ms" aria-label="Peak Auto Collision business hours">
+          <div class="business-status" id="businessStatus" role="status" aria-live="polite">
+            <span class="business-status-dot" aria-hidden="true"></span>
+            <strong id="businessStatusTitle">Checking today's hours</strong>
+            <span class="business-status-detail" id="businessStatusDetail">Eastern Time</span>
+          </div>
+          <div class="hero-hours" aria-label="Weekly hours">
+            <div class="hero-hours-day" data-day="1"><span>Mon</span><strong>8–5</strong></div>
+            <div class="hero-hours-day" data-day="2"><span>Tue</span><strong>8–5</strong></div>
+            <div class="hero-hours-day" data-day="3"><span>Wed</span><strong>8–5</strong></div>
+            <div class="hero-hours-day" data-day="4"><span>Thu</span><strong>8–5</strong></div>
+            <div class="hero-hours-day" data-day="5"><span>Fri</span><strong>8–5</strong></div>
+            <div class="hero-hours-day" data-day="6"><span>Sat</span><strong>8–12</strong></div>
+            <div class="hero-hours-day" data-day="0"><span>Sun</span><strong>Closed</strong></div>
+          </div>
+          <p class="business-time-zone">Hours shown in Eastern Time</p>
+        </div>
       </div>
     </section>
 
@@ -464,13 +482,13 @@
               <li>
                 <span class="contact-label">Hours</span>
                 <table class="hours-table">
-                  <tr><th>Monday</th><td>8 AM&ndash;5 PM</td></tr>
-                  <tr><th>Tuesday</th><td>8 AM&ndash;5 PM</td></tr>
-                  <tr><th>Wednesday</th><td>8 AM&ndash;5 PM</td></tr>
-                  <tr><th>Thursday</th><td>8 AM&ndash;5 PM</td></tr>
-                  <tr><th>Friday</th><td>8 AM&ndash;5 PM</td></tr>
-                  <tr><th>Saturday</th><td>8 AM&ndash;12 PM</td></tr>
-                  <tr><th>Sunday</th><td>Closed</td></tr>
+                  <tr data-day="1"><th>Monday</th><td>8 AM&ndash;5 PM</td></tr>
+                  <tr data-day="2"><th>Tuesday</th><td>8 AM&ndash;5 PM</td></tr>
+                  <tr data-day="3"><th>Wednesday</th><td>8 AM&ndash;5 PM</td></tr>
+                  <tr data-day="4"><th>Thursday</th><td>8 AM&ndash;5 PM</td></tr>
+                  <tr data-day="5"><th>Friday</th><td>8 AM&ndash;5 PM</td></tr>
+                  <tr data-day="6"><th>Saturday</th><td>8 AM&ndash;12 PM</td></tr>
+                  <tr data-day="0"><th>Sunday</th><td>Closed</td></tr>
                 </table>
               </li>
               <li>
@@ -506,7 +524,7 @@
       </p>
       <p class="footer-copy">&copy; <span id="year"></span> Peak Auto Collision. All rights reserved.</p>
       <p class="footer-credit">
-        <a href="https://bellmorewebdesign.com" target="_blank" rel="noopener noreferrer">Website by Bellmore Web Design</a>
+        <a href="https://bellmorewebdesign.com" target="_blank" rel="noopener noreferrer">Powered By Bellmore Web Design</a>
       </p>
     </div>
   </footer>

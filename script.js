@@ -223,6 +223,90 @@
     });
   }
 
+  /* ===== Live Eastern Time business status ===== */
+  function initBusinessHours() {
+    var status = document.getElementById("businessStatus");
+    var title = document.getElementById("businessStatusTitle");
+    var detail = document.getElementById("businessStatusDetail");
+    if (!status || !title || !detail) return;
+
+    var timeZone = "America/New_York";
+    var weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var weeklyHours = [
+      null,
+      { opens: 8 * 60, closes: 17 * 60, openLabel: "8 AM", closeLabel: "5 PM" },
+      { opens: 8 * 60, closes: 17 * 60, openLabel: "8 AM", closeLabel: "5 PM" },
+      { opens: 8 * 60, closes: 17 * 60, openLabel: "8 AM", closeLabel: "5 PM" },
+      { opens: 8 * 60, closes: 17 * 60, openLabel: "8 AM", closeLabel: "5 PM" },
+      { opens: 8 * 60, closes: 17 * 60, openLabel: "8 AM", closeLabel: "5 PM" },
+      { opens: 8 * 60, closes: 12 * 60, openLabel: "8 AM", closeLabel: "12 PM" }
+    ];
+
+    function getEasternTime(date) {
+      var parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: timeZone,
+        weekday: "long",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23"
+      }).formatToParts(date);
+      var values = {};
+
+      parts.forEach(function (part) {
+        if (part.type !== "literal") values[part.type] = part.value;
+      });
+
+      return {
+        day: weekDays.indexOf(values.weekday),
+        minutes: Number(values.hour) * 60 + Number(values.minute)
+      };
+    }
+
+    function getNextOpening(day, minutes) {
+      for (var offset = 0; offset <= 7; offset += 1) {
+        var nextDay = (day + offset) % 7;
+        var hours = weeklyHours[nextDay];
+
+        if (!hours) continue;
+        if (offset === 0 && minutes >= hours.opens) continue;
+
+        var dayLabel = offset === 0 ? "today" : (offset === 1 ? "tomorrow" : weekDays[nextDay]);
+        return "Opens " + dayLabel + " at " + hours.openLabel;
+      }
+
+      return "Call for our next opening";
+    }
+
+    function update() {
+      var eastern = getEasternTime(new Date());
+      var todayHours = weeklyHours[eastern.day];
+      var isOpen = Boolean(todayHours && eastern.minutes >= todayHours.opens && eastern.minutes < todayHours.closes);
+
+      title.textContent = isOpen ? "Open" : "Closed";
+      detail.textContent = isOpen
+        ? "Closes at " + todayHours.closeLabel
+        : getNextOpening(eastern.day, eastern.minutes);
+      status.classList.toggle("is-open", isOpen);
+      status.classList.toggle("is-closed", !isOpen);
+
+      document.querySelectorAll("[data-day]").forEach(function (element) {
+        var isToday = Number(element.getAttribute("data-day")) === eastern.day;
+        element.classList.toggle("is-today", isToday);
+        if (isToday) {
+          element.setAttribute("aria-current", "date");
+        } else {
+          element.removeAttribute("aria-current");
+        }
+      });
+    }
+
+    update();
+    window.setInterval(update, 60000);
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) update();
+    });
+  }
+
   /* ===== Footer year ===== */
   function initYear() {
     var el = document.getElementById("year");
@@ -235,5 +319,6 @@
   initFeaturedPan();
   initLightbox();
   initReviewsToggle();
+  initBusinessHours();
   initYear();
 })();
