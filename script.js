@@ -307,6 +307,212 @@
     });
   }
 
+  /* ===== Instagram reels carousel =====
+     Slides carry their video file in data-src, so nothing is downloaded
+     until a slide becomes active. The active slide plays muted and looped
+     while the carousel is on screen; every other slide is paused and
+     rewound. Clips have no audio track, so there is no sound control. */
+  function initReelsCarousel() {
+    var carousel = document.getElementById("reelsCarousel");
+    var track = document.getElementById("reelsTrack");
+    if (!carousel || !track) return;
+
+    var slides = Array.prototype.slice.call(track.querySelectorAll(".reel-slide"));
+    var dots = Array.prototype.slice.call(document.querySelectorAll("[data-reel-dot]"));
+    var prevBtn = document.getElementById("reelsPrev");
+    var nextBtn = document.getElementById("reelsNext");
+    if (!slides.length) return;
+
+    var index = 0;
+    var onScreen = false;
+    var userPaused = false; // set when someone deliberately pauses the active clip
+    var scrollLock = 0;     // ignore scroll sync briefly after we move the track
+    var ticking = false;
+
+    function videoOf(slide) { return slide.querySelector(".reel-video"); }
+
+    function titleOf(slide) {
+      var heading = slide.querySelector(".reel-caption h3");
+      return heading ? heading.textContent.trim() : "this clip";
+    }
+
+    function labelStage(slide, playing) {
+      var btn = slide.querySelector(".reel-stage");
+      if (btn) {
+        btn.setAttribute("aria-label", (playing ? "Pause" : "Play") + " the video: " + titleOf(slide));
+      }
+    }
+
+    function play(slide) {
+      var video = videoOf(slide);
+      if (!video) return;
+      if (!video.getAttribute("src")) {
+        var src = video.getAttribute("data-src");
+        if (!src) return;
+        video.setAttribute("src", src);
+      }
+      var attempt = video.play();
+      // Autoplay can be refused (data saver, low power mode). The poster stays up.
+      if (attempt && attempt.catch) attempt.catch(function () {});
+    }
+
+    function pause(slide, rewind) {
+      var video = videoOf(slide);
+      if (!video) return;
+      video.pause();
+      if (rewind && video.currentTime) {
+        try { video.currentTime = 0; } catch (e) {}
+      }
+    }
+
+    function syncPlayback() {
+      slides.forEach(function (slide, i) {
+        if (i !== index) {
+          pause(slide, true);
+        } else if (onScreen && !userPaused && !reducedMotion.matches) {
+          play(slide);
+        } else {
+          pause(slide, false);
+        }
+      });
+    }
+
+    function setActive(i, moveTrack) {
+      var next = Math.max(0, Math.min(slides.length - 1, i));
+      if (next !== index) userPaused = false;
+      index = next;
+
+      slides.forEach(function (slide, n) {
+        slide.classList.toggle("is-active", n === index);
+      });
+      dots.forEach(function (dot, n) {
+        dot.classList.toggle("is-active", n === index);
+        dot.setAttribute("aria-selected", n === index ? "true" : "false");
+      });
+      if (prevBtn) prevBtn.disabled = index === 0;
+      if (nextBtn) nextBtn.disabled = index === slides.length - 1;
+
+      if (moveTrack) centerSlide(index);
+      syncPlayback();
+    }
+
+    // Rect maths rather than offsetLeft, so track padding cannot skew it.
+    function centerSlide(i) {
+      var slide = slides[i];
+      if (!slide) return;
+      var trackBox = track.getBoundingClientRect();
+      var slideBox = slide.getBoundingClientRect();
+      var delta = (slideBox.left + slideBox.width / 2) - (trackBox.left + trackBox.width / 2);
+      if (Math.abs(delta) < 1) return;
+      track.scrollLeft += delta;
+      scrollLock = Date.now() + 600;
+    }
+
+    function nearestSlide() {
+      var trackBox = track.getBoundingClientRect();
+      var center = trackBox.left + trackBox.width / 2;
+      var best = 0;
+      var bestDistance = Infinity;
+      slides.forEach(function (slide, i) {
+        var box = slide.getBoundingClientRect();
+        var distance = Math.abs((box.left + box.width / 2) - center);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = i;
+        }
+      });
+      return best;
+    }
+
+    function onTrackScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () {
+        ticking = false;
+        if (Date.now() < scrollLock) return;
+        var nearest = nearestSlide();
+        if (nearest !== index) setActive(nearest, false);
+      });
+    }
+
+    // Keep the is-playing class tied to the real media state, not our intent.
+    slides.forEach(function (slide, i) {
+      var video = videoOf(slide);
+      if (video) {
+        video.addEventListener("play", function () {
+          slide.classList.add("is-playing");
+          labelStage(slide, true);
+        });
+        video.addEventListener("pause", function () {
+          slide.classList.remove("is-playing");
+          labelStage(slide, false);
+        });
+      }
+
+      var stage = slide.querySelector(".reel-stage");
+      if (!stage) return;
+      stage.addEventListener("click", function () {
+        if (i !== index) {
+          setActive(i, true);
+          return;
+        }
+        var active = videoOf(slide);
+        if (!active) return;
+        if (active.paused) {
+          userPaused = false;
+          play(slide);
+        } else {
+          userPaused = true;
+          active.pause();
+        }
+      });
+    });
+
+    dots.forEach(function (dot, i) {
+      dot.addEventListener("click", function () { setActive(i, true); });
+    });
+    if (prevBtn) prevBtn.addEventListener("click", function () { setActive(index - 1, true); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { setActive(index + 1, true); });
+
+    carousel.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        setActive(index - 1, true);
+      } else if (e.key === "ArrowRight") {
+        e.preventDefault();
+        setActive(index + 1, true);
+      }
+    });
+
+    track.addEventListener("scroll", onTrackScroll, { passive: true });
+
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          onScreen = entry.isIntersecting;
+          syncPlayback();
+        });
+      }, { threshold: 0.35 });
+      io.observe(carousel);
+    } else {
+      onScreen = true;
+    }
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) {
+        slides.forEach(function (slide) { pause(slide, false); });
+      } else {
+        syncPlayback();
+      }
+    });
+
+    if (reducedMotion.addEventListener) {
+      reducedMotion.addEventListener("change", syncPlayback);
+    }
+
+    setActive(0, false);
+  }
+
   /* ===== Footer year ===== */
   function initYear() {
     var el = document.getElementById("year");
@@ -318,6 +524,7 @@
   initReveals();
   initFeaturedPan();
   initLightbox();
+  initReelsCarousel();
   initReviewsToggle();
   initBusinessHours();
   initYear();
